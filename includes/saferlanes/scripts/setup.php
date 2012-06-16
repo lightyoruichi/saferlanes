@@ -7,14 +7,6 @@
 
 
 
-/*Set up the controller factory*/
-$table = array(
-    'post'=>'saferlanes\controllers\PostController',
-    'vote'=>'saferlanes\controllers\VoteController',
-    'about'=>'saferlanes\controllers\AboutPage',
-    'contact'=>'saferlanes\controllers\ContactPage'
-    );
-
 $controllers->setControllerTable($table);
 $controllers->setIndex('saferlanes\controllers\SearchController');
 $controllers->setDefaultController('saferlanes\controllers\DisplayController');
