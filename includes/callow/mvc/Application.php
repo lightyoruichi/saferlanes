@@ -126,6 +126,16 @@ final class Application
     }
 
     /**
+     * Assigns the ctable that will be used by the controller factory.
+     * @param array $ctable
+     * @return void
+     */
+    public function useTable(array $ctable)
+    {
+        $this->ctable = $ctable;
+    }
+
+    /**
      * Starts execution of the script.
      * @return void
      */
