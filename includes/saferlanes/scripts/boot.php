@@ -4,15 +4,21 @@
  * Sets the controller table for saferlanes.
  */
 
+if(count($this->params) > 4)
+    header('Location:/');
+
 $this->ctable = array
         (
 
     /*Saferlanes secret keywords*/
     'post'=>'saferlanes\controllers\PostController',
     'vote'=>'saferlanes\controllers\VoteController',
-    'about'=>'saferlanes\controllers\AboutPage',
-    'contact'=>'saferlanes\controllers\ContactPage',
-    'version'=>'saferlanes\controllers\Build'
     );
+
+$this->cfactory->setIndex('saferlanes\controllers\SearchController');
+$this->cfactory->setDefaultController('saferlanes\controllers\DisplayController');
+
+
+
 
 ?>

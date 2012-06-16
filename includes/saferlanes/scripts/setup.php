@@ -7,12 +7,6 @@
 
 
 
-$controllers->setControllerTable($table);
-$controllers->setIndex('saferlanes\controllers\SearchController');
-$controllers->setDefaultController('saferlanes\controllers\DisplayController');
-
-if(count($params) > 4)
-    header('Location:/');
 
 require_once 'settings.php';
 

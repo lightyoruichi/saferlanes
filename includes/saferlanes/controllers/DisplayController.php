@@ -35,12 +35,14 @@ class DisplayController extends Controller
     public function main()
     {
 
-        if(count($this->params) > 1)
+        $params = $this->env->getParams();
+
+        if(count($params) > 1)
             new Redirect('/', TRUE);
 
         $screen = new Screen();
 
-        if($this->params[0])
+        if($params[0])
         {
 
             $driver = new FormatedDriver();
@@ -48,7 +50,7 @@ class DisplayController extends Controller
             try
             {
 
-                $driver->setPlate($this->params[0]);
+                $driver->setPlate($params[0]);
 
                 $con = ConnectionFactory::getConnection();
 

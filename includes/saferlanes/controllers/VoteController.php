@@ -38,6 +38,8 @@ class VoteController extends Controller
     public function main()
     {
 
+        $params = $this->env->getParams();
+
         $session = new Session();
 
         $screen = new Screen();
@@ -61,7 +63,7 @@ class VoteController extends Controller
 
         $stoken = new String($session->get('vote_key'));
 
-        $btoken = new String($this->params[2]);
+        $btoken = new String($params[2]);
 
         $valid_vote = ($stoken->equals($btoken)) ?TRUE : FALSE;
 
@@ -83,11 +85,11 @@ class VoteController extends Controller
         else
         {
 
-            if ($this->params[0] === 'plus')
+            if ($params[0] === 'plus')
             {
                 $code = new DriverSQLGenerator();
             }
-            elseif ($this->params[0] === 'minus')
+            elseif ($params[0] === 'minus')
             {
                 $code = new MinusSQLGenerator();
             }
@@ -101,7 +103,7 @@ class VoteController extends Controller
 
                 $driver = new Driver();
 
-                $driver->setPlate($this->params[1]);
+                $driver->setPlate($params[1]);
 
                 $con = ConnectionFactory::getConnection();
 

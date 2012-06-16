@@ -38,7 +38,7 @@ final class Application
      * @var array scripts
      * @access private
      */
-    private $scripts = array ();
+    private $scripts = array ('boot'=>NULL, 'run'=>NULL, 'exit'=>NULL);
 
     /**
      * An array containing paramenters parsed from the clean url.
@@ -55,6 +55,8 @@ final class Application
     public function __construct($path_to_class_loader)
     {
         require_once $path_to_class_loader;
+        $this->cfactory = new ControllerFactory();
+        $this->_readParams();
 
     }
 
@@ -112,7 +114,7 @@ final class Application
     public function setRuntimeScript($path)
     {
 
-        return $this->_isRunnable($path, 'startup');
+        return $this->_isRunnable($path, 'run');
 
     }
 
@@ -121,10 +123,10 @@ final class Application
      * @param string $path
      * @return boolean
      */
-    public function setFinishScript($path)
+    public function setExitScript($path)
     {
 
-        return $this->_isRunnable($path, 'finish');
+        return $this->_isRunnable($path, 'exit');
 
     }
 
@@ -140,13 +142,11 @@ final class Application
     }
 
     /**
-     * Returns an array containing parameters created from the current uri
-     * @return array
+     * Reads parameters from a clean url.
      */
-    public function getParams()
+    private function _readParams()
     {
-
-        if (!count($this->params) > 0)
+          if (!count($this->params) > 0)
         {
 
             $url = urldecode($_SERVER['REQUEST_URI']);
@@ -160,6 +160,18 @@ final class Application
 
             $this->params = $params;
         }
+
+
+
+
+    }
+
+    /**
+     * Returns an array containing parameters created from the current uri
+     * @return array
+     */
+    public function getParams()
+    {
 
         return $this->params;
 
@@ -176,23 +188,17 @@ final class Application
         if ($this->scripts['boot'])
             include_once "{$this->scripts['boot']}";
 
-        $this->params = new Parameters();
-
-        $this->cfactory = new ControllerFactory();
-
-        $args = $this->params->getParams();
-
-        $controller = $this->cfactory->getController($this, $args);
+        $controller = $this->cfactory->getController($this, $this->getParams());
 
         //This script should declare any application specific constants and other settings.
-        if ($this->scripts['startup'])
-            include_once "{$this->scripts['startup']}";
+        if ($this->scripts['run'])
+            include_once "{$this->scripts['run']}";
 
         $controller->main();
 
         //This script is here to preform reporting, garbage collection, logging etc.
-        if ($this->scripts['finish'])
-            include_once "{$this->scripts['finish']}";
+        if ($this->scripts['exit'])
+            include_once "{$this->scripts['exit']}";
 
     }
 
