@@ -2,9 +2,9 @@
 
 require_once 'callow/mvc/Application.php';
 
-$saferlanes = new callow\mvc\Application();
+$saferlanes = new callow\mvc\Application('saferlanes/scripts/classloader.php');
 
-$saferlanes->setStartUpScript('saferlanes/scripts/boot.php');
+$saferlanes->setBootScript('saferlanes/scripts/boot.php');
 
 $saferlanes->setRuntimeScript('saferlanes/scripts/setup.php');
 

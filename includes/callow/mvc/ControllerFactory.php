@@ -99,7 +99,7 @@ class ControllerFactory
      * @return \callow\mvc\ControllerFactory
      *
      */
-    public function getController($args=NULL)
+    public function getController(Application &$app, $args=NULL)
     {
 
         if(count($args)> 0)
@@ -122,7 +122,7 @@ class ControllerFactory
 
 
 
-        $Controller = new $class ($args);
+        $Controller = new $class ($app);
 
 
 

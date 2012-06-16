@@ -21,16 +21,16 @@ abstract class Controller
 {
 
     /**
-     * Contains arguments passed to the controller..
-     * @var array params;
+     * Reference to the Global application object.
+     * @var Application $env;
      */
-    protected $params = array(); //@todo this should be a collection
+    protected $env;
 
 
-    public function __construct(array $params = NULL)
+    public function __construct(Application $env)
     {
-        if($params)
-            $this->params = $params;
+
+            $this->env = $env;
     }
 
 

@@ -48,15 +48,18 @@ final class Application
      */
     private $params;
 
-
-    public function __construct($path_to_class_loader = NULL)
+/**
+ * Constructs the Application object and loads the classloader.
+ * @todo error handling
+ * @param string $path_to_class_loader
+ */
+    public function __construct($path_to_class_loader)
     {
-        if($path_to_class_loader)
             require_once $path_to_class_loader;
     }
 
     /**
-     *
+     * Determines if a passed script is runnable.
      * @param string $path
      * @param string $order
      * @return boolean
@@ -102,11 +105,11 @@ final class Application
     }
 
     /**
-     * Sets the path to a script that bootstraps the application.
+     * Sets the path to a script run before business logic starts.
      * @param string $path
      * @return boolean
      */
-    public function setStartUpScript($path)
+    public function setRuntimeScript($path)
     {
 
         return $this->_isRunnable($path, 'startup');
@@ -142,7 +145,7 @@ final class Application
     public function run()
     {
 
-        //This script should get the class loader going and load the ctables.
+        //This script should initialize the environment settings files and the ctables.
         if ($this->scripts['boot'])
             include_once "{$this->scripts['boot']}";
 
@@ -152,7 +155,7 @@ final class Application
 
         $args = $this->params->getParams();
 
-        $controller = $this->cfactory->getController($args);
+        $controller = $this->cfactory->getController($this, $args);
 
         //This script should declare any application specific constants and other settings.
         if ($this->scripts['startup'])
