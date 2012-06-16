@@ -22,7 +22,7 @@ class Parameters
      * Returns an array containing parameters created from the current uri
      * @return array
      */
-    public static function getParams()
+    public function getParams()
     {
 
         $url = urldecode($_SERVER['REQUEST_URI']);

@@ -26,13 +26,12 @@ final class Application
      */
     private $cfactory;
 
-
     /**
      * The ctable is an array mapping keywords to application controllers.
      * @var array $ctable;
      * @access private
      */
-    private $ctable = array();
+    private $ctable = array ();
 
     /**
      * An array of scripts the application will call at specific times.
@@ -42,20 +41,21 @@ final class Application
     private $scripts = array ();
 
     /**
-     * Internal object that treats the current url as a collection of parameters.
-     * @var callow\mvc\Parameters  params;
+     * An array containing paramenters parsed from the clean url.
+     * @var array  params;
      * @access private
      */
-    private $params;
+    private $params = array ();
 
-/**
- * Constructs the Application object and loads the classloader.
- * @todo error handling
- * @param string $path_to_class_loader
- */
+    /**
+     * Constructs the Application object and loads the classloader.
+     * @todo error handling
+     * @param string $path_to_class_loader
+     */
     public function __construct($path_to_class_loader)
     {
-            require_once $path_to_class_loader;
+        require_once $path_to_class_loader;
+
     }
 
     /**
@@ -136,6 +136,33 @@ final class Application
     public function useTable(array $ctable)
     {
         $this->ctable = $ctable;
+
+    }
+
+    /**
+     * Returns an array containing parameters created from the current uri
+     * @return array
+     */
+    public function getParams()
+    {
+
+        if (!count($this->params) > 0)
+        {
+
+            $url = urldecode($_SERVER['REQUEST_URI']);
+
+            @$params = explode('/', $url);
+
+            array_shift($params);
+
+            if (empty($params[0]))
+                array_shift($params);
+
+            $this->params = $params;
+        }
+
+        return $this->params;
+
     }
 
     /**
