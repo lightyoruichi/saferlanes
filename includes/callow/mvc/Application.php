@@ -8,13 +8,15 @@
  * @copyright 2012 Lasana Murray
  * @package callow\mvc
  *
- *  Class that represents the currently running script.
+ *  The application class is responsible for setting up the environment and
+ *   running a controller for the requested action.
  *
  */
 
 namespace callow\mvc;
 
-class Application
+
+final class Application
 {
 
     /**
@@ -24,27 +26,34 @@ class Application
      */
     private $cfactory;
 
-    /**
-     * Stores the path to a script that will be included before the controllers are called in
-     * @var string $preboot
-     * @access private
-     */
-    private $startup;
 
     /**
-     * Stores the path to a script that will be included just before the script runs.
-     * @var string $postboot
+     * The ctable is an array mapping keywords to application controllers.
+     * @var array $ctable;
      * @access private
      */
-    private $runtime;
+    private $ctable = array();
 
     /**
-     * Stores the path to a script that will be included just before the script exits.
-     * @var string $postboot
+     * An array of scripts the application will call at specific times.
+     * @var array scripts
      * @access private
      */
-    private $exit;
+    private $scripts = array ();
 
+    /**
+     * Internal object that treats the current url as a collection of parameters.
+     * @var callow\mvc\Parameters  params;
+     * @access private
+     */
+    private $params;
+
+
+    public function __construct($path_to_class_loader = NULL)
+    {
+        if($path_to_class_loader)
+            require_once $path_to_class_loader;
+    }
 
     /**
      *
@@ -52,26 +61,25 @@ class Application
      * @param string $order
      * @return boolean
      */
-    private function _bootable($path, $order)
+    private function _isRunnable($path, $order)
     {
 
 
         if (is_string($path))
         {
 
-            $fullpath = str_replace('.:', NULL, get_include_path()."/".$path);
+            $fullpath = str_replace('.:', NULL, get_include_path() . "/" . $path);
 
             if (file_exists($path))
             {
 
-                $this->$order = $path;
+                $this->scripts[$order] = $path;
 
                 return TRUE;
-
             }
-            elseif(file_exists($fullpath))
+            elseif (file_exists($fullpath))
             {
-                $this->$order = $path;
+                $this->scripts[$order] = $fullpath;
             }
         }
         else
@@ -79,46 +87,43 @@ class Application
             return FALSE;
         }
 
+    }
+
+    /**
+     * Sets the path to a script that conditions the environment for the script
+     * @param string $path
+     * @return boolean
+     */
+    public function setBootScript($path)
+    {
+
+        return $this->_isRunnable($path, 'boot');
 
     }
 
     /**
-     * Sets the path of a script that is used to boot strap the script.
+     * Sets the path to a script that bootstraps the application.
      * @param string $path
      * @return boolean
      */
     public function setStartUpScript($path)
     {
 
-        return $this->_bootable($path, 'startup');
-
-    }
-
-
-    /**
-     * Sets the path of a script that will be run before the controllers are called.
-     * @param string $path
-     * @return boolean
-     */
-    public function setRuntimeScript($path)
-    {
-
-        return $this->_bootable($path, 'runtime');
+        return $this->_isRunnable($path, 'startup');
 
     }
 
     /**
-     * Sets the path to a script that will be run before the script terminates.
+     * Sets the path to a script that will be run before the application terminates.
      * @param string $path
      * @return boolean
      */
-    public function setExitScript($path)
+    public function setFinishScript($path)
     {
 
-        return $this->_bootable($path, 'exit');
+        return $this->_isRunnable($path, 'finish');
 
     }
-        
 
     /**
      * Starts execution of the script.
@@ -127,23 +132,27 @@ class Application
     public function run()
     {
 
-        //Should set the class loader, perform checks etc.
-        if ($this->startup)
-            include_once "$this->startup";
+        //This script should get the class loader going and load the ctables.
+        if ($this->scripts['boot'])
+            include_once "{$this->scripts['boot']}";
 
-        $params = Parameters::getParams();
+        $this->params = new Parameters();
 
-        $controllers = new ControllerFactory();
+        $this->cfactory = new ControllerFactory();
 
-        /*Should run any setup actions*/
-        if ($this->runtime)
-            include_once "$this->runtime";
+        $args = $this->params->getParams();
 
-        $controllers->getController($params)->main();
+        $controller = $this->cfactory->getController($args);
 
-        /*Should run any clean up and reporting actions*/
-        if ($this->exit)
-            include_once "$this->exit";
+        //This script should declare any application specific constants and other settings.
+        if ($this->scripts['startup'])
+            include_once "{$this->scripts['startup']}";
+
+        $controller->main();
+
+        //This script is here to preform reporting, garbage collection, logging etc.
+        if ($this->scripts['finish'])
+            include_once "{$this->scripts['finish']}";
 
     }
 
