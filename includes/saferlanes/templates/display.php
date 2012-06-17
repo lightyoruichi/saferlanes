@@ -29,6 +29,8 @@
                     </ul>
                     <p>Link to this record: http://sl.trinistorm.org/<?= $page->get('plate'); ?></p>
                 </div>
+                <p class="link"><a href="/">Search for a driver</a></p>
+                <p class="link"><a href="/post">Post a driver</a></p>
             </div>
         </div>
     </body>

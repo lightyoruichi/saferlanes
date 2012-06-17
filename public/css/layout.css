@@ -150,20 +150,6 @@ input:-moz-placeholder
     color:#c0c0c0;
 }
 
-
-
-ul.nav
-{
-    margin-top: 2em;
-    list-style-type: none;
-}
-
-ul.nav li
-{
-    display: inline-block;
-    margin-right: 1em;
-}
-
 div.vbox
 {
     font-family: Courier;
@@ -223,4 +209,10 @@ div.notice>a
 {
     color: #09f;
 
+}
+
+p.link
+{
+    margin-top: 1em;
+    text-align: center;
 }

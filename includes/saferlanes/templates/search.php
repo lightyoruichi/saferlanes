@@ -3,18 +3,15 @@
     <head>
         <link rel="stylesheet" href="css/layout.css" type="text/css" media="screen, projection"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title><?= $page->get('title'); ?></title>
+        <title>Saferlanes: Making it hard to drive bad.</title>
     </head>
     <body>
         <div id="master">
             <div id="window">
                 <img src="img/van.png" alt="truck"/>
                 <h1>Saferlanes</h1>
-                <p>Ever wanted to get a general opinion of your driving?</p>
-                <p>Saferlanes is a web application that aggregates votes on local drivers based on their licence plate numbers.</p>
-                <p>The votes are basically 'likes' or 'fails' in relation to your repuatation on the nation's roadways</p>
-                <p>Enter a plate number below to see what has been collected so far.</p>
-                <p>Do you want to add a plate number? Use <a href="/post">this</a> link.</p>
+                <p>Ever wondered what people think about your driving?</p>
+                <p>Enter a vehicle plate number below and we will tell you.</p>
                 <div id="application">
                     <form name="plate_number" method="POST" action="/">
                         <?= $page->get('msg'); ?>
@@ -22,7 +19,8 @@
                         <input id="pnum" class="title" type="text" name="plate" placeholder="Driver search"/>
                         <input  type="submit" value="go" name="submit"  />
                     </form>
-                </div>
+                    </div>
+                <p class="link"><a href="/post">Post a vehicle number</a></p>
             </div>
         </div>
 </body>

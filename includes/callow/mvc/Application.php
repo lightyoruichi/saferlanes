@@ -188,6 +188,8 @@ final class Application
         if ($this->scripts['boot'])
             include_once "{$this->scripts['boot']}";
 
+         $this->cfactory->setControllerTable($this->ctable);
+
         $controller = $this->cfactory->getController($this, $this->getParams());
 
         //This script should declare any application specific constants and other settings.

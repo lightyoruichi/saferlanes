@@ -27,6 +27,7 @@
                     </form>
                 </div>
             </div>
+            <p class="link"><a href="/">Search for a driver</a></p>
         </div>
     </body>
 </html>
